@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trazo – Plataforma de arte</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f6f8;--surface:#fff;--ink:#1a2233;--mute:#667085;--line:#dfe3ea;--acc:#2f5bea;--acc-ink:#fff;--ok:#1f9d63;--no:#c2410c;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141d;--surface:#181e2a;--ink:#eef1f7;--mute:#98a2b3;--line:#2a3243;--acc:#7b9bff;--acc-ink:#0b1020;--ok:#4cc38a;--no:#f08a55}}
+:root[data-theme="dark"]{--bg:#10141d;--surface:#181e2a;--ink:#eef1f7;--mute:#98a2b3;--line:#2a3243;--acc:#7b9bff;--acc-ink:#0b1020;--ok:#4cc38a;--no:#f08a55}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 "Bricolage Grotesque",system-ui,sans-serif}
+button,input,textarea,select{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:10px 16px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--surface);z-index:10}
+.logo{font-weight:800;font-size:22px;text-decoration:none;margin-right:auto;letter-spacing:-.02em}
+.logo b{color:var(--acc)}
+.search{flex:1 1 220px;max-width:380px;display:flex;gap:8px}
+input,textarea,select{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+select{width:auto}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:9px 14px;cursor:pointer;text-decoration:none;display:inline-block;font-weight:600}
+.btn.p{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
+.btn.d{color:var(--no)}
+nav{display:flex;gap:8px;align-items:center}
+.av{width:34px;height:34px;border-radius:50%;object-fit:cover;background:var(--line)}
+main{max-width:1100px;margin:0 auto;padding:24px 16px 60px}
+h1{font-size:clamp(28px,5vw,44px);line-height:1.1;margin:8px 0 6px;letter-spacing:-.03em;font-weight:800}
+h2{font-size:20px;margin:28px 0 12px}
+.sub{color:var(--mute);margin:0 0 20px;max-width:60ch}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.tag{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:4px 12px;cursor:pointer;font-size:14px}
+.tag[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.grid{columns:3 220px;column-gap:16px}
+.card{break-inside:avoid;margin:0 0 16px;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;cursor:pointer;width:100%;padding:0;text-align:left;display:block}
+.card img{display:block;width:100%}
+.card div{padding:10px 12px}
+.card strong{display:block}
+.card small{color:var(--mute)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;max-width:640px}
+.panel label{display:block;font-weight:600;margin:14px 0 4px}
+.row{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.pf{display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.pf .av{width:96px;height:96px}
+.pill{display:inline-block;border-radius:99px;padding:3px 12px;font-size:14px;font-weight:600;border:1px solid currentColor}
+.ok{color:var(--ok)}.no{color:var(--no)}
+.drop{border:2px dashed var(--line);border-radius:10px;padding:26px;text-align:center;color:var(--mute);cursor:pointer}
+.drop.on{border-color:var(--acc);color:var(--acc)}
+.list{display:grid;gap:10px}
+.item{display:flex;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px}
+.item img{width:64px;height:64px;object-fit:cover;border-radius:6px}
+.item .t{flex:1;min-width:0}
+.modal{position:fixed;inset:0;background:rgba(10,14,22,.65);display:none;align-items:center;justify-content:center;padding:16px;z-index:20}
+.modal.open{display:flex}
+.box{background:var(--surface);border-radius:12px;max-width:760px;width:100%;max-height:90vh;overflow:auto;position:relative}
+.box>img{width:100%;display:block}
+.box .in{padding:16px 20px 20px}
+.x{position:absolute;top:8px;right:8px;background:var(--surface);border:1px solid var(--line);border-radius:50%;width:34px;height:34px;cursor:pointer}
+.note{font-size:13px;color:var(--mute);margin-top:12px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;display:none;z-index:30}
+.empty{color:var(--mute);padding:30px 0}
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="#inicio">Tra<b>zo</b></a>
+  <form class="search" id="sf" role="search"><input id="q" type="search" placeholder="Buscar por título, artista o palabra clave" aria-label="Buscar"></form>
+  <nav id="nav"></nav>
+</header>
+<main id="app"></main>
+<div class="modal" id="modal" role="dialog" aria-modal="true"><div class="box" id="box"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ---------- Datos simulados ----------
+var ARTISTS = {
+  luna:{name:"Luna Ortega",bio:"Ilustradora digital. Pinto paisajes suaves y cielos imposibles.",open:true,c:["#7aa2ff","#f9c3d6"]},
+  marco:{name:"Marco Vidal",bio:"Arte abstracto y geométrico con tinta y color plano.",open:false,c:["#1f9d63","#f6d365"]},
+  ines:{name:"Inés Duarte",bio:"Retratos y figuras. Acepto encargos por temporadas.",open:true,c:["#e4572e","#2e3a59"]}
+};
+var WORKS = [
+  {id:1,t:"Marea de noche",a:"luna",tag:"Paisaje",d:"Mar en calma bajo un cielo violeta. Ilustración digital, 4000×5000 px.",s:1},
+  {id:2,t:"Cumbres",a:"luna",tag:"Paisaje",d:"Montañas en capas con neblina. Pintura digital.",s:2},
+  {id:3,t:"Bloques",a:"marco",tag:"Abstracto",d:"Composición geométrica en verde y ocre.",s:3},
+  {id:4,t:"Ritmo",a:"marco",tag:"Abstracto",d:"Líneas y círculos con tinta y acuarela escaneada.",s:4},
+  {id:5,t:"Retrato en rojo",a:"ines",tag:"Retrato",d:"Estudio de rostro con luz cálida lateral.",s:5},
+  {id:6,t:"Lectora",a:"ines",tag:"Retrato",d:"Figura sentada leyendo junto a la ventana.",s:6},
+  {id:7,t:"Faro",a:"luna",tag:"Paisaje",d:"Un faro solitario al amanecer.",s:7},
+  {id:8,t:"Mosaico 2",a:"marco",tag:"Abstracto",d:"Serie de mosaicos modulares.",s:8}
+];
+var TAGS = ["Paisaje","Abstracto","Retrato","Personaje"];
+var state = {user:null, tag:"", q:"", me:"luna", nextId:100};
+
+// ---------- Utilidades ----------
+function $(s){return document.querySelector(s)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function rnd(seed){var x=seed*9301+49297;return function(){x=(x*9301+49297)%233280;return x/233280}}
+function art(seed,c,h){ // arte generativo en SVG
+  var r=rnd(seed*7+3),w=400,s='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+w+' '+h+'"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+c[0]+'"/><stop offset="1" stop-color="'+c[1]+'"/></linearGradient></defs><rect width="'+w+'" height="'+h+'" fill="url(#g)"/>';
+  for(var i=0;i<6;i++){s+='<circle cx="'+(r()*w|0)+'" cy="'+(r()*h|0)+'" r="'+(30+r()*90|0)+'" fill="#fff" opacity="'+(.08+r()*.2).toFixed(2)+'"/>'}
+  for(var j=0;j<3;j++){var y=h*(.5+j*.15);s+='<path d="M0 '+y+' Q 100 '+(y-50*r())+' 200 '+y+' T 400 '+y+' V '+h+' H0Z" fill="#101828" opacity="'+(.15+j*.15)+'"/>'}
+  return 'data:image/svg+xml;utf8,'+encodeURIComponent(s+'</svg>');
+}
+function img(w){if(w.url)return w.url;var A=ARTISTS[w.a];return art(w.s,A.c,w.s%2?500:380)}
+function avatar(k){var A=ARTISTS[k];return art(k.length*11,A.c,400)}
+function toast(m){var t=$("#toast");t.textContent=m;t.style.display="block";clearTimeout(toast.h);toast.h=setTimeout(function(){t.style.display="none"},2200)}
+function go(h){location.hash=h}
+
+// ---------- Navegación / sesión ----------
+function renderNav(){
+  var n=$("#nav");
+  if(state.user){
+    n.innerHTML='<a class="btn" href="#admin">Mi panel</a><img class="av" alt="Tu avatar" src="'+avatar(state.me)+'"><button class="btn" id="out">Cerrar sesión</button>';
+    $("#out").onclick=function(){state.user=null;go("inicio");toast("Sesión cerrada");route()};
+  } else {
+    n.innerHTML='<a class="btn" href="#login">Iniciar sesión</a><a class="btn p" href="#registro">Registrarse</a>';
+  }
+}
+
+// ---------- Vistas ----------
+function cardHTML(w){var A=ARTISTS[w.a];return '<button class="card" data-id="'+w.id+'"><img alt="'+esc(w.t)+'" src="'+img(w)+'"><div><strong>'+esc(w.t)+'</strong><small>'+esc(A.name)+' · '+esc(w.tag)+'</small></div></button>'}
+function bindCards(){document.querySelectorAll(".card").forEach(function(c){c.onclick=function(){openWork(+c.dataset.id)}})}
+
+function vInicio(){
+  var q=state.q.toLowerCase();
+  var list=WORKS.filter(function(w){
+    return (!state.tag||w.tag===state.tag)&&(!q||(w.t+w.d+w.tag+ARTISTS[w.a].name).toLowerCase().indexOf(q)>-1)});
+  var tags='<button class="tag" aria-pressed="'+(!state.tag)+'" data-t="">Todas</button>'+TAGS.map(function(t){return '<button class="tag" aria-pressed="'+(state.tag===t)+'" data-t="'+t+'">'+t+'</button>'}).join("");
+  $("#app").innerHTML='<h1>Ilustración de artistas independientes</h1><p class="sub">Explora obras originales y encuentra a quién contratar para tu próximo encargo.</p><div class="tags">'+tags+'</div>'+
+    (list.length?'<div class="grid">'+list.map(cardHTML).join("")+'</div>':'<p class="empty">No hay obras con esa búsqueda. Prueba otra palabra o quita la etiqueta.</p>');
+  document.querySelectorAll(".tag").forEach(function(b){b.onclick=function(){state.tag=b.dataset.t;vInicio()}});
+  bindCards();
+}
+
+function vArtista(k){
+  var A=ARTISTS[k]; if(!A){go("inicio");return}
+  var ws=WORKS.filter(function(w){return w.a===k});
+  $("#app").innerHTML='<div class="pf"><img class="av" alt="Avatar de '+esc(A.name)+'" src="'+avatar(k)+'"><div><h1>'+esc(A.name)+'</h1><p class="sub" style="margin:0 0 8px">'+esc(A.bio)+'</p><span class="pill '+(A.open?'ok':'no')+'">'+(A.open?'Comisiones abiertas':'Comisiones cerradas')+'</span></div></div><h2>Obras ('+ws.length+')</h2>'+
+    (ws.length?'<div class="grid">'+ws.map(cardHTML).join("")+'</div>':'<p class="empty">Este artista aún no ha subido obras.</p>');
+  bindCards();
+}
+
+function vAuth(reg){
+  $("#app").innerHTML='<div class="panel"><h1 style="font-size:28px">'+(reg?'Crear cuenta':'Iniciar sesión')+'</h1><form id="af">'+
+    (reg?'<label for="nm">Nombre público</label><input id="nm" required>':'')+
+    '<label for="em">Correo electrónico</label><input id="em" type="email" required placeholder="tu@correo.com">'+
+    '<label for="pw">Contraseña</label><input id="pw" type="password" required minlength="6"><p class="row" style="margin-top:18px"><button class="btn p" type="submit">'+(reg?'Crear cuenta':'Entrar')+'</button><a href="#'+(reg?'login':'registro')+'">'+(reg?'Ya tengo cuenta':'Crear una cuenta')+'</a></p></form>'+
+    '<p class="note">Prototipo: la sesión es simulada. En la versión real este formulario se conecta a Supabase Auth.</p></div>';
+  $("#af").onsubmit=function(e){e.preventDefault();state.user={email:$("#em").value};go("admin");toast(reg?"Cuenta creada":"Sesión iniciada")};
+}
+
+function vAdmin(){
+  if(!state.user){go("login");return}
+  var A=ARTISTS[state.me], mine=WORKS.filter(function(w){return w.a===state.me});
+  var opts=TAGS.map(function(t){return '<option>'+t+'</option>'}).join("");
+  $("#app").innerHTML='<h1>Mi panel</h1><p class="sub">Sesión: '+esc(state.user.email)+' · <a href="#artista-'+state.me+'">Ver mi portafolio</a></p>'+
+  '<h2>Perfil</h2><form class="panel" id="pfm"><div class="row"><img class="av" id="pav" style="width:64px;height:64px" alt="Foto de perfil" src="'+avatar(state.me)+'"><label class="btn" style="margin:0">Cambiar foto<input type="file" id="pfile" accept="image/*" hidden></label></div>'+
+  '<label for="bio">Biografía</label><textarea id="bio" rows="3">'+esc(A.bio)+'</textarea>'+
+  '<label class="row" style="margin-top:14px"><input type="checkbox" id="open" style="width:auto"'+(A.open?' checked':'')+'> Aceptar encargos</label><p><button class="btn p" type="submit" style="margin-top:12px">Guardar cambios</button></p></form>'+
+  '<h2>Subir obra</h2><form class="panel" id="upf"><label class="drop" id="drop" style="display:block">Arrastra una imagen aquí o haz clic para elegir<input type="file" id="ufile" accept="image/*" hidden></label><img id="prev" alt="" style="display:none;max-width:160px;margin-top:10px;border-radius:8px">'+
+  '<label for="ut">Título</label><input id="ut" required><label for="ud">Descripción</label><textarea id="ud" rows="2"></textarea><label for="utag">Etiqueta</label><select id="utag">'+opts+'</select><p><button class="btn p" type="submit" style="margin-top:12px">Publicar obra</button></p></form>'+
+  '<h2>Mi colección</h2><div class="list" id="coll"></div>';
+  coll();
+  $("#pfm").onsubmit=function(e){e.preventDefault();A.bio=$("#bio").value;A.open=$("#open").checked;toast("Perfil guardado")};
+  $("#pfile").onchange=function(e){var f=e.target.files[0];if(f){$("#pav").src=URL.createObjectURL(f)}};
+  var up=null,drop=$("#drop");
+  function setFile(f){if(!f)return;up=URL.createObjectURL(f);var p=$("#prev");p.src=up;p.style.display="block";drop.textContent="Imagen lista: "+f.name}
+  $("#ufile").onchange=function(e){setFile(e.target.files[0])};
+  drop.ondragover=function(e){e.preventDefault();drop.classList.add("on")};
+  drop.ondragleave=function(){drop.classList.remove("on")};
+  drop.ondrop=function(e){e.preventDefault();drop.classList.remove("on");setFile(e.dataTransfer.files[0])};
+  $("#upf").onsubmit=function(e){e.preventDefault();
+    WORKS.unshift({id:state.nextId++,t:$("#ut").value,a:state.me,tag:$("#utag").value,d:$("#ud").value||"Sin descripción.",s:state.nextId,url:up});
+    toast("Obra publicada");vAdmin()};
+}
+function coll(){
+  var mine=WORKS.filter(function(w){return w.a===state.me}),c=$("#coll");
+  c.innerHTML=mine.length?mine.map(function(w){return '<div class="item"><img alt="" src="'+img(w)+'"><div class="t"><strong>'+esc(w.t)+'</strong><br><small>'+esc(w.tag)+'</small></div><button class="btn" data-e="'+w.id+'">Editar</button><button class="btn d" data-x="'+w.id+'">Eliminar</button></div>'}).join(""):'<p class="empty">Aún no has subido obras. Usa el formulario de arriba para publicar la primera.</p>';
+  c.querySelectorAll("[data-x]").forEach(function(b){b.onclick=function(){var i=WORKS.findIndex(function(w){return w.id==b.dataset.x});if(confirm("¿Eliminar esta obra?")){WORKS.splice(i,1);coll();toast("Obra eliminada")}}});
+  c.querySelectorAll("[data-e]").forEach(function(b){b.onclick=function(){var w=WORKS.find(function(w){return w.id==b.dataset.e}),n=prompt("Nuevo título:",w.t);if(n){w.t=n;coll();toast("Título actualizado")}}});
+}
+
+// ---------- Modal ----------
+function openWork(id){
+  var w=WORKS.find(function(x){return x.id===id}),A=ARTISTS[w.a];
+  $("#box").innerHTML='<button class="x" aria-label="Cerrar" id="mx">✕</button><img alt="'+esc(w.t)+'" src="'+img(w)+'"><div class="in"><h2 style="margin:0 0 4px">'+esc(w.t)+'</h2><p class="sub" style="margin:0 0 10px">'+esc(w.d)+'</p><div class="row"><a href="#artista-'+w.a+'" id="ml">'+esc(A.name)+'</a><span class="pill '+(A.open?'ok':'no')+'">'+(A.open?'Disponible para encargos':'No disponible por ahora')+'</span></div></div>';
+  $("#modal").classList.add("open");$("#mx").focus();
+  $("#mx").onclick=closeM;$("#ml").onclick=closeM;
+}
+function closeM(){$("#modal").classList.remove("open")}
+$("#modal").onclick=function(e){if(e.target.id==="modal")closeM()};
+document.addEventListener("keydown",function(e){if(e.key==="Escape")closeM()});
+
+// ---------- Buscador y rutas ----------
+$("#sf").onsubmit=function(e){e.preventDefault()};
+$("#q").oninput=function(e){state.q=e.target.value;if((location.hash||"#inicio")!=="#inicio"){go("inicio")}else{vInicio()}};
+function route(){
+  closeM();renderNav();
+  var h=(location.hash||"#inicio").slice(1);window.scrollTo(0,0);
+  if(h==="login")vAuth(false);
+  else if(h==="registro")vAuth(true);
+  else if(h==="admin")vAdmin();
+  else if(h.indexOf("artista-")===0)vArtista(h.slice(8));
+  else vInicio();
+}
+window.addEventListener("hashchange",route);
+route();
+</script>
+</body>
+</html>
